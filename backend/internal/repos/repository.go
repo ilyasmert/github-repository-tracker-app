@@ -104,20 +104,6 @@ func (r *Repository) GetByID(ctx context.Context, id int) (*ent.TrackedRepo, err
 	return tr, nil
 }
 
-// GetByFullName looks up a tracked repo by its "owner/name" key.
-func (r *Repository) GetByFullName(ctx context.Context, fullName string) (*ent.TrackedRepo, error) {
-	tr, err := r.client.TrackedRepo.Query().
-		Where(trackedrepo.FullNameEQ(fullName)).
-		Only(ctx)
-	if err != nil {
-		if ent.IsNotFound(err) {
-			return nil, ErrNotFound
-		}
-		return nil, fmt.Errorf("repos: get by full_name: %w", err)
-	}
-	return tr, nil
-}
-
 // Exists reports whether a row with the given full_name is already stored.
 func (r *Repository) Exists(ctx context.Context, fullName string) (bool, error) {
 	ok, err := r.client.TrackedRepo.Query().

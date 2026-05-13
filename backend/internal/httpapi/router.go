@@ -7,9 +7,13 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/ilyas/repository-tracker-app/backend/internal/config"
+	"github.com/ilyas/repository-tracker-app/backend/internal/httpapi/handlers"
+	"github.com/ilyas/repository-tracker-app/backend/internal/repos"
 )
 
-func NewRouter(cfg config.Config) *gin.Engine {
+// NewRouter builds the Gin engine and registers every API route. Dependencies
+// are injected so cmd/server can wire them and tests can swap them out.
+func NewRouter(cfg config.Config, svc *repos.Service) *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Recovery(), gin.Logger())
 	r.Use(cors.New(cors.Config{
@@ -24,10 +28,7 @@ func NewRouter(cfg config.Config) *gin.Engine {
 	})
 
 	api := r.Group("/api")
-	{
-		// Handlers will be wired here in a follow-up commit.
-		_ = api
-	}
+	handlers.NewRepos(svc).Register(api)
 
 	return r
 }
