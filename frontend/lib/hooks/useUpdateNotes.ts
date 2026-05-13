@@ -12,14 +12,8 @@ export type UpdateNotesVariables = {
   notes: string;
 };
 
-type RepoListSnapshot = {
-  key: readonly unknown[];
-  data: TrackedRepo[];
-}[];
-
 type MutationContext = {
-  previousLists: RepoListSnapshot;
-  previousRepo: TrackedRepo | undefined;
+  previousNotes: string | undefined;
 };
 
 export function useUpdateNotes() {
@@ -30,37 +24,54 @@ export function useUpdateNotes() {
       await qc.cancelQueries({ queryKey: ["repos"] });
       await qc.cancelQueries({ queryKey: queryKeys.repo(id) });
 
-      const previousLists = qc
-        .getQueriesData<TrackedRepo[]>({ queryKey: ["repos"] })
-        .filter((entry): entry is [readonly unknown[], TrackedRepo[]] => {
-          return Array.isArray(entry[1]);
-        })
-        .map(([key, data]) => ({ key, data }));
+      let previousNotes: string | undefined;
 
-      for (const { key, data } of previousLists) {
-        qc.setQueryData<TrackedRepo[]>(
-          key,
-          data.map((row) => (row.id === id ? { ...row, notes } : row)),
-        );
+      const lists = qc.getQueriesData<TrackedRepo[]>({ queryKey: ["repos"] });
+      for (const [key, data] of lists) {
+        if (!Array.isArray(data)) continue;
+        let changed = false;
+        const next = data.map((row) => {
+          if (row.id !== id) return row;
+          if (previousNotes === undefined) previousNotes = row.notes;
+          changed = true;
+          return { ...row, notes };
+        });
+        if (changed) qc.setQueryData<TrackedRepo[]>(key, next);
       }
 
       const previousRepo = qc.getQueryData<TrackedRepo>(queryKeys.repo(id));
       if (previousRepo) {
+        if (previousNotes === undefined) previousNotes = previousRepo.notes;
         qc.setQueryData<TrackedRepo>(queryKeys.repo(id), {
           ...previousRepo,
           notes,
         });
       }
 
-      return { previousLists, previousRepo };
+      return { previousNotes };
     },
     onError: (_err, { id }, ctx) => {
-      if (!ctx) return;
-      for (const { key, data } of ctx.previousLists) {
-        qc.setQueryData<TrackedRepo[]>(key, data);
+      if (!ctx || ctx.previousNotes === undefined) return;
+      const restored = ctx.previousNotes;
+
+      const lists = qc.getQueriesData<TrackedRepo[]>({ queryKey: ["repos"] });
+      for (const [key, data] of lists) {
+        if (!Array.isArray(data)) continue;
+        let changed = false;
+        const next = data.map((row) => {
+          if (row.id !== id) return row;
+          changed = true;
+          return { ...row, notes: restored };
+        });
+        if (changed) qc.setQueryData<TrackedRepo[]>(key, next);
       }
-      if (ctx.previousRepo) {
-        qc.setQueryData<TrackedRepo>(queryKeys.repo(id), ctx.previousRepo);
+
+      const currentRepo = qc.getQueryData<TrackedRepo>(queryKeys.repo(id));
+      if (currentRepo) {
+        qc.setQueryData<TrackedRepo>(queryKeys.repo(id), {
+          ...currentRepo,
+          notes: restored,
+        });
       }
     },
     onSettled: (_data, _err, { id }) => {
