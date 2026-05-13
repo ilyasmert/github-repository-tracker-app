@@ -66,7 +66,7 @@ export function FiltersBar() {
             }
           }}
           placeholder="e.g. Go"
-          className="mt-1 w-48 rounded border border-slate-300 bg-white px-2 py-1 text-sm focus:border-slate-500 focus:outline-none"
+          className="mt-1 w-full rounded border border-slate-300 bg-white px-2 py-1 text-sm focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-200 sm:w-48"
         />
       </div>
 
@@ -78,7 +78,7 @@ export function FiltersBar() {
           id="sort-select"
           value={sortParam}
           onChange={(e) => onSortChange(e.target.value)}
-          className="mt-1 w-56 rounded border border-slate-300 bg-white px-2 py-1 text-sm focus:border-slate-500 focus:outline-none"
+          className="mt-1 w-full rounded border border-slate-300 bg-white px-2 py-1 text-sm focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-200 sm:w-56"
         >
           {SORT_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>

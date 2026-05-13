@@ -8,28 +8,24 @@ import { StatsPanel } from "@/components/StatsPanel";
 export default function HomePage() {
   return (
     <div className="space-y-8">
-      <section aria-labelledby="stats-heading">
+      <section aria-labelledby="stats-heading" className="space-y-3">
         <h2
           id="stats-heading"
           className="text-sm font-medium uppercase tracking-wide text-slate-500"
         >
           Stats
         </h2>
-        <div className="mt-2">
-          <StatsPanel />
-        </div>
+        <StatsPanel />
       </section>
 
-      <section aria-labelledby="add-heading">
+      <section aria-labelledby="add-heading" className="space-y-3">
         <h2
           id="add-heading"
           className="text-sm font-medium uppercase tracking-wide text-slate-500"
         >
           Add a repository
         </h2>
-        <div className="mt-2">
-          <AddRepoForm />
-        </div>
+        <AddRepoForm />
       </section>
 
       <section aria-labelledby="list-heading" className="space-y-3">

@@ -1,7 +1,7 @@
 # Project Rules
 
 ## Stack
-- Backend: Go 1.22, Gin, Ent, PostgreSQL
+- Backend: Go 1.25, Gin, Ent, PostgreSQL
 - Frontend: Next.js App Router, TypeScript strict mode
 - Styling: TailwindCSS
 

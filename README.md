@@ -2,7 +2,7 @@
 
 Small full-stack app for tracking GitHub repositories.
 
-- **Backend:** Go 1.22, Gin, Ent, PostgreSQL
+- **Backend:** Go 1.25, Gin, Ent, PostgreSQL
 - **Frontend:** Next.js (App Router), TypeScript strict, TailwindCSS
 
 This commit contains the project scaffold only — no business logic yet.

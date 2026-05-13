@@ -94,7 +94,7 @@ export function AddRepoForm() {
             aria-invalid={errors.owner ? "true" : "false"}
             aria-describedby={errors.owner ? "repo-owner-error" : undefined}
             disabled={submitting}
-            className="mt-1 w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-sm focus:border-slate-500 focus:outline-none disabled:bg-slate-50 disabled:text-slate-500"
+            className="mt-1 w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-sm focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
             {...register("owner")}
           />
           {errors.owner ? (
@@ -124,7 +124,7 @@ export function AddRepoForm() {
             aria-invalid={errors.name ? "true" : "false"}
             aria-describedby={errors.name ? "repo-name-error" : undefined}
             disabled={submitting}
-            className="mt-1 w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-sm focus:border-slate-500 focus:outline-none disabled:bg-slate-50 disabled:text-slate-500"
+            className="mt-1 w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-sm focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
             {...register("name")}
           />
           {errors.name ? (
@@ -142,7 +142,7 @@ export function AddRepoForm() {
           <button
             type="submit"
             disabled={!isValid || submitting}
-            className="inline-flex w-full items-center justify-center rounded bg-slate-900 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-1 disabled:cursor-not-allowed disabled:bg-slate-400 sm:w-auto"
+            className="inline-flex w-full items-center justify-center rounded bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:bg-slate-400 sm:w-auto"
           >
             {submitting ? (
               <>

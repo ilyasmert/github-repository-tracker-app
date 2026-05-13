@@ -40,7 +40,7 @@ export function RepoList() {
         <button
           type="button"
           onClick={() => refetch()}
-          className="rounded border border-red-300 bg-white px-2 py-1 text-xs font-medium text-red-700 hover:bg-red-100"
+          className="rounded border border-red-300 bg-white px-2 py-1 text-xs font-medium text-red-700 hover:bg-red-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-1"
         >
           Retry
         </button>

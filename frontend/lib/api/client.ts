@@ -32,13 +32,21 @@ export async function apiFetch<T>(
   }
 
   const text = await res.text();
-  const body = text ? (JSON.parse(text) as unknown) : null;
+  let body: unknown = null;
+  if (text) {
+    try {
+      body = JSON.parse(text);
+    } catch {
+      // Non-JSON body (e.g. an upstream proxy 502 returning HTML). Leave body
+      // null so we fall through to the generic error path below.
+    }
+  }
 
   if (!res.ok) {
     const err = body as ApiErrorBody | null;
     throw new ApiError(
       err?.error?.code ?? "UNKNOWN",
-      err?.error?.message ?? res.statusText,
+      err?.error?.message ?? res.statusText ?? "Request failed",
       res.status,
     );
   }

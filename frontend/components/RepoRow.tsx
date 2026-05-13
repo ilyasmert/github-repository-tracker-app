@@ -10,7 +10,7 @@ import { useUpdateNotes } from "@/lib/hooks/useUpdateNotes";
 
 import { ConfirmDialog } from "./ConfirmDialog";
 
-const NOTES_MAX = 1000;
+const NOTES_MAX = 2000;
 
 function formatFetchedAt(iso: string): string {
   const d = new Date(iso);
@@ -173,7 +173,7 @@ export function RepoRow({ repo }: { repo: TrackedRepo }) {
             href={repo.html_url}
             target="_blank"
             rel="noreferrer noopener"
-            className="text-base font-semibold text-slate-900 hover:underline"
+            className="rounded text-base font-semibold text-slate-900 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-1"
           >
             {repo.name}
           </a>
@@ -222,7 +222,7 @@ export function RepoRow({ repo }: { repo: TrackedRepo }) {
             <button
               type="button"
               onClick={startEditing}
-              className="text-xs font-medium text-slate-600 hover:text-slate-900"
+              className="rounded text-xs font-medium text-slate-600 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-1"
             >
               {repo.notes ? "Edit" : "Add notes"}
             </button>
@@ -244,7 +244,7 @@ export function RepoRow({ repo }: { repo: TrackedRepo }) {
               aria-describedby={
                 notesError ? `repo-notes-${repo.id}-error` : undefined
               }
-              className="w-full resize-y rounded border border-slate-300 bg-white px-2 py-1.5 text-sm focus:border-slate-500 focus:outline-none disabled:bg-slate-50 disabled:text-slate-500"
+              className="w-full resize-y rounded border border-slate-300 bg-white px-2 py-1.5 text-sm focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
               placeholder="Add notes about this repository…"
             />
             <div className="mt-1 flex items-center justify-between gap-2">
@@ -256,7 +256,7 @@ export function RepoRow({ repo }: { repo: TrackedRepo }) {
                   type="button"
                   onClick={cancelEditing}
                   disabled={saving}
-                  className="rounded border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="rounded border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   Cancel
                 </button>
@@ -264,7 +264,7 @@ export function RepoRow({ repo }: { repo: TrackedRepo }) {
                   type="button"
                   onClick={() => void saveEditing()}
                   disabled={saving}
-                  className="rounded bg-slate-900 px-2 py-1 text-xs font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+                  className="rounded bg-slate-900 px-2 py-1 text-xs font-medium text-white hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:bg-slate-400"
                 >
                   {saving ? "Saving…" : "Save"}
                 </button>
@@ -314,7 +314,7 @@ export function RepoRow({ repo }: { repo: TrackedRepo }) {
           href={repo.html_url}
           target="_blank"
           rel="noreferrer noopener"
-          className="hover:underline"
+          className="rounded hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-1"
         >
           {repo.full_name} ↗
         </a>
@@ -327,7 +327,7 @@ export function RepoRow({ repo }: { repo: TrackedRepo }) {
             onClick={onRefresh}
             disabled={refreshing || deleting}
             aria-label={`Refresh ${repo.full_name}`}
-            className="inline-flex items-center gap-1.5 rounded border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center gap-1.5 rounded border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {refreshing ? (
               <>
@@ -346,7 +346,7 @@ export function RepoRow({ repo }: { repo: TrackedRepo }) {
             onClick={openDeleteConfirm}
             disabled={refreshing || deleting}
             aria-label={`Delete ${repo.full_name}`}
-            className="rounded border border-red-200 bg-white px-2 py-1 text-xs font-medium text-red-700 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded border border-red-200 bg-white px-2 py-1 text-xs font-medium text-red-700 hover:bg-red-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60"
           >
             Delete
           </button>

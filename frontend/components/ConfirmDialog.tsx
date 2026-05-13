@@ -28,9 +28,16 @@ export function ConfirmDialog({
   onCancel,
 }: ConfirmDialogProps) {
   const confirmRef = useRef<HTMLButtonElement>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    if (open) confirmRef.current?.focus();
+    if (!open) return;
+    previouslyFocusedRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    confirmRef.current?.focus();
+    return () => {
+      previouslyFocusedRef.current?.focus();
+    };
   }, [open]);
 
   useEffect(() => {
@@ -48,8 +55,8 @@ export function ConfirmDialog({
   if (!open) return null;
 
   const confirmClass = destructive
-    ? "bg-red-600 hover:bg-red-700 disabled:bg-red-300"
-    : "bg-slate-900 hover:bg-slate-800 disabled:bg-slate-400";
+    ? "bg-red-600 hover:bg-red-700 focus-visible:ring-red-500 disabled:bg-red-300"
+    : "bg-slate-900 hover:bg-slate-800 focus-visible:ring-slate-500 disabled:bg-slate-400";
 
   return (
     <div
@@ -87,7 +94,7 @@ export function ConfirmDialog({
             type="button"
             onClick={onCancel}
             disabled={busy}
-            className="rounded border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {cancelLabel}
           </button>
@@ -96,7 +103,7 @@ export function ConfirmDialog({
             type="button"
             onClick={onConfirm}
             disabled={busy}
-            className={`rounded px-3 py-1.5 text-sm font-medium text-white disabled:cursor-not-allowed ${confirmClass}`}
+            className={`rounded px-3 py-1.5 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 disabled:cursor-not-allowed ${confirmClass}`}
           >
             {busy ? "Working…" : confirmLabel}
           </button>
