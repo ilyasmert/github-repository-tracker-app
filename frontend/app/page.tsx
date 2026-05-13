@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 
+import { AddRepoForm } from "@/components/AddRepoForm";
 import { FiltersBar } from "@/components/FiltersBar";
 import { RepoList } from "@/components/RepoList";
 import { StatsPanel } from "@/components/StatsPanel";
@@ -26,8 +27,8 @@ export default function HomePage() {
         >
           Add a repository
         </h2>
-        <div className="mt-2 rounded-lg border border-dashed border-slate-300 bg-white px-4 py-6 text-sm text-slate-500">
-          Add form will render here.
+        <div className="mt-2">
+          <AddRepoForm />
         </div>
       </section>
 
