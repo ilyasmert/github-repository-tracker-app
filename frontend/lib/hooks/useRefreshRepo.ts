@@ -13,7 +13,19 @@ export function useRefreshRepo() {
     mutationFn: (id) => refreshRepo(id),
     onSuccess: (data) => {
       qc.setQueryData(queryKeys.repo(data.id), data);
-      void qc.invalidateQueries({ queryKey: ["repos"] });
+
+      const lists = qc.getQueriesData<TrackedRepo[]>({ queryKey: ["repos"] });
+      for (const [key, list] of lists) {
+        if (!Array.isArray(list)) continue;
+        let changed = false;
+        const next = list.map((row) => {
+          if (row.id !== data.id) return row;
+          changed = true;
+          return data;
+        });
+        if (changed) qc.setQueryData<TrackedRepo[]>(key, next);
+      }
+
       void qc.invalidateQueries({ queryKey: queryKeys.stats() });
     },
   });

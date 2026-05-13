@@ -4,7 +4,11 @@ import { useEffect, useRef, useState } from "react";
 
 import { ApiError } from "@/lib/api/client";
 import type { TrackedRepo } from "@/lib/api/types";
+import { useDeleteRepo } from "@/lib/hooks/useDeleteRepo";
+import { useRefreshRepo } from "@/lib/hooks/useRefreshRepo";
 import { useUpdateNotes } from "@/lib/hooks/useUpdateNotes";
+
+import { ConfirmDialog } from "./ConfirmDialog";
 
 const NOTES_MAX = 1000;
 
@@ -34,10 +38,44 @@ function messageForNotesError(err: unknown): string {
   return "Could not save notes. Please try again.";
 }
 
+function messageForRefreshError(err: unknown): string {
+  if (err instanceof ApiError) {
+    switch (err.code) {
+      case "NOT_FOUND":
+        return "This repository no longer exists.";
+      case "GITHUB_NOT_FOUND":
+        return "GitHub no longer has this repository.";
+      case "GITHUB_RATE_LIMITED":
+        return "GitHub rate limit reached. Try again in a few minutes.";
+      case "UPSTREAM":
+        return "GitHub is having trouble responding. Try again shortly.";
+      default:
+        return err.message || "Could not refresh. Please try again.";
+    }
+  }
+  return "Could not refresh. Please try again.";
+}
+
+function messageForDeleteError(err: unknown): string {
+  if (err instanceof ApiError) {
+    switch (err.code) {
+      case "NOT_FOUND":
+        return "This repository was already removed.";
+      default:
+        return err.message || "Could not delete. Please try again.";
+    }
+  }
+  return "Could not delete. Please try again.";
+}
+
 export function RepoRow({ repo }: { repo: TrackedRepo }) {
-  const mutation = useUpdateNotes();
+  const notesMutation = useUpdateNotes();
+  const refreshMutation = useRefreshRepo();
+  const deleteMutation = useDeleteRepo();
+
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(repo.notes);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -48,18 +86,28 @@ export function RepoRow({ repo }: { repo: TrackedRepo }) {
     if (editing) textareaRef.current?.focus();
   }, [editing]);
 
-  const saving = mutation.isPending;
-  const apiError = mutation.error ? messageForNotesError(mutation.error) : null;
+  const saving = notesMutation.isPending;
+  const refreshing = refreshMutation.isPending;
+  const deleting = deleteMutation.isPending;
+  const notesError = notesMutation.error
+    ? messageForNotesError(notesMutation.error)
+    : null;
+  const refreshError = refreshMutation.error
+    ? messageForRefreshError(refreshMutation.error)
+    : null;
+  const deleteError = deleteMutation.error
+    ? messageForDeleteError(deleteMutation.error)
+    : null;
 
   function startEditing() {
-    mutation.reset();
+    notesMutation.reset();
     setDraft(repo.notes);
     setEditing(true);
   }
 
   function cancelEditing() {
     if (saving) return;
-    mutation.reset();
+    notesMutation.reset();
     setDraft(repo.notes);
     setEditing(false);
   }
@@ -71,7 +119,7 @@ export function RepoRow({ repo }: { repo: TrackedRepo }) {
       return;
     }
     try {
-      await mutation.mutateAsync({ id: repo.id, notes: next });
+      await notesMutation.mutateAsync({ id: repo.id, notes: next });
       setEditing(false);
     } catch {
       /* error surfaced via mutation.error; stay in edit mode */
@@ -90,8 +138,35 @@ export function RepoRow({ repo }: { repo: TrackedRepo }) {
     }
   }
 
+  function onRefresh() {
+    refreshMutation.reset();
+    refreshMutation.mutate(repo.id);
+  }
+
+  function openDeleteConfirm() {
+    deleteMutation.reset();
+    setConfirmingDelete(true);
+  }
+
+  function closeDeleteConfirm() {
+    if (deleting) return;
+    setConfirmingDelete(false);
+  }
+
+  async function confirmDelete() {
+    try {
+      await deleteMutation.mutateAsync(repo.id);
+      setConfirmingDelete(false);
+    } catch {
+      /* error surfaced via deleteMutation.error; keep dialog open */
+    }
+  }
+
   return (
-    <li className="rounded-lg border border-slate-200 bg-white px-4 py-4">
+    <li
+      aria-busy={refreshing || deleting}
+      className="rounded-lg border border-slate-200 bg-white px-4 py-4"
+    >
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <div className="min-w-0">
           <a
@@ -165,8 +240,10 @@ export function RepoRow({ repo }: { repo: TrackedRepo }) {
               disabled={saving}
               maxLength={NOTES_MAX}
               rows={3}
-              aria-invalid={apiError ? "true" : "false"}
-              aria-describedby={apiError ? `repo-notes-${repo.id}-error` : undefined}
+              aria-invalid={notesError ? "true" : "false"}
+              aria-describedby={
+                notesError ? `repo-notes-${repo.id}-error` : undefined
+              }
               className="w-full resize-y rounded border border-slate-300 bg-white px-2 py-1.5 text-sm focus:border-slate-500 focus:outline-none disabled:bg-slate-50 disabled:text-slate-500"
               placeholder="Add notes about this repository…"
             />
@@ -210,19 +287,29 @@ export function RepoRow({ repo }: { repo: TrackedRepo }) {
           </p>
         )}
 
-        {apiError ? (
+        {notesError ? (
           <p
             id={`repo-notes-${repo.id}-error`}
             role="alert"
             aria-live="polite"
             className="mt-2 rounded border border-red-200 bg-red-50 px-2 py-1.5 text-xs text-red-700"
           >
-            {apiError}
+            {notesError}
           </p>
         ) : null}
       </div>
 
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-xs text-slate-500">
+      {refreshError ? (
+        <p
+          role="alert"
+          aria-live="polite"
+          className="mt-2 rounded border border-red-200 bg-red-50 px-2 py-1.5 text-xs text-red-700"
+        >
+          {refreshError}
+        </p>
+      ) : null}
+
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 text-xs text-slate-500">
         <a
           href={repo.html_url}
           target="_blank"
@@ -231,10 +318,52 @@ export function RepoRow({ repo }: { repo: TrackedRepo }) {
         >
           {repo.full_name} ↗
         </a>
-        <span title={repo.fetched_at}>
-          Last fetched {formatFetchedAt(repo.fetched_at)}
-        </span>
+        <div className="flex items-center gap-2">
+          <span title={repo.fetched_at}>
+            Last fetched {formatFetchedAt(repo.fetched_at)}
+          </span>
+          <button
+            type="button"
+            onClick={onRefresh}
+            disabled={refreshing || deleting}
+            aria-label={`Refresh ${repo.full_name}`}
+            className="inline-flex items-center gap-1.5 rounded border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {refreshing ? (
+              <>
+                <span
+                  aria-hidden="true"
+                  className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-slate-400 border-t-transparent"
+                />
+                Refreshing…
+              </>
+            ) : (
+              "Refresh"
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={openDeleteConfirm}
+            disabled={refreshing || deleting}
+            aria-label={`Delete ${repo.full_name}`}
+            className="rounded border border-red-200 bg-white px-2 py-1 text-xs font-medium text-red-700 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            Delete
+          </button>
+        </div>
       </div>
+
+      <ConfirmDialog
+        open={confirmingDelete}
+        title="Delete repository?"
+        description={`This will remove ${repo.full_name} from your tracked list. This action cannot be undone.`}
+        confirmLabel="Delete"
+        destructive
+        busy={deleting}
+        error={deleteError}
+        onConfirm={() => void confirmDelete()}
+        onCancel={closeDeleteConfirm}
+      />
     </li>
   );
 }
