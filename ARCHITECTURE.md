@@ -6,7 +6,7 @@ Goals: production-quality feel without overengineering. Sharp boundaries between
 
 Stack is fixed by CLAUDE.md:
 
-Backend: Go 1.22, Gin, Ent, PostgreSQL
+Backend: Go 1.25, Gin, Ent, PostgreSQL
 Frontend: Next.js App Router, TypeScript strict, TailwindCSS
 1. Backend architecture
 Strict layering, one direction of dependency (handler → service → repo → ent client; service → github client).
