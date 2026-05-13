@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Providers } from "./providers";
-// @ts-expect-error - Next.js handles global CSS imports here.
+// @ts-ignore - Next.js handles global CSS imports; IDE TS server may not see the augmentation.
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -33,7 +33,7 @@ export default function RootLayout({
             </main>
             <footer className="border-t border-slate-200 bg-white">
               <div className="mx-auto max-w-5xl px-6 py-3 text-xs text-slate-500">
-                Take-home assignment scaffold.
+                GitHub Repository Tracker.
               </div>
             </footer>
           </div>

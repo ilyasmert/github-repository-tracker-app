@@ -1,3 +1,9 @@
+import { Suspense } from "react";
+
+import { FiltersBar } from "@/components/FiltersBar";
+import { RepoList } from "@/components/RepoList";
+import { StatsPanel } from "@/components/StatsPanel";
+
 export default function HomePage() {
   return (
     <div className="space-y-8">
@@ -8,8 +14,8 @@ export default function HomePage() {
         >
           Stats
         </h2>
-        <div className="mt-2 rounded-lg border border-dashed border-slate-300 bg-white px-4 py-6 text-sm text-slate-500">
-          Stats panel will render here.
+        <div className="mt-2">
+          <StatsPanel />
         </div>
       </section>
 
@@ -25,16 +31,19 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section aria-labelledby="list-heading">
+      <section aria-labelledby="list-heading" className="space-y-3">
         <h2
           id="list-heading"
           className="text-sm font-medium uppercase tracking-wide text-slate-500"
         >
           Tracked repositories
         </h2>
-        <div className="mt-2 rounded-lg border border-dashed border-slate-300 bg-white px-4 py-6 text-sm text-slate-500">
-          Filters and list will render here.
-        </div>
+        <Suspense fallback={null}>
+          <FiltersBar />
+        </Suspense>
+        <Suspense fallback={null}>
+          <RepoList />
+        </Suspense>
       </section>
     </div>
   );
