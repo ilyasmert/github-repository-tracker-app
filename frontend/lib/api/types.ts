@@ -3,9 +3,9 @@ export type TrackedRepo = {
   owner: string;
   name: string;
   full_name: string;
-  description: string | null;
+  description: string;
   stars: number;
-  language: string | null;
+  language: string;
   html_url: string;
   notes: string;
   fetched_at: string;
