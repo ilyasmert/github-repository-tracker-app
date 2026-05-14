@@ -31,6 +31,7 @@ type CreateParams struct {
 	FullName    string
 	Description string
 	Stars       int
+	Forks		int
 	Language    string
 	HTMLURL     string
 	FetchedAt   time.Time
@@ -41,6 +42,7 @@ type CreateParams struct {
 type RefreshParams struct {
 	Description string
 	Stars       int
+	Forks		int
 	Language    string
 	HTMLURL     string
 	FetchedAt   time.Time
@@ -79,6 +81,7 @@ func (r *Repository) Create(ctx context.Context, p CreateParams) (*ent.TrackedRe
 		SetFullName(p.FullName).
 		SetDescription(p.Description).
 		SetStars(p.Stars).
+		SetForks(p.Forks).
 		SetLanguage(p.Language).
 		SetHTMLURL(p.HTMLURL).
 		SetFetchedAt(p.FetchedAt).
@@ -166,6 +169,7 @@ func (r *Repository) Refresh(ctx context.Context, id int, p RefreshParams) (*ent
 	tr, err := r.client.TrackedRepo.UpdateOneID(id).
 		SetDescription(p.Description).
 		SetStars(p.Stars).
+		SetForks(p.Forks).
 		SetLanguage(p.Language).
 		SetHTMLURL(p.HTMLURL).
 		SetFetchedAt(p.FetchedAt).

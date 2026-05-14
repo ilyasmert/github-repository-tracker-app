@@ -16,6 +16,7 @@ type Repo struct {
 	FullName    string    `json:"full_name"`
 	Description string    `json:"description"`
 	Stars       int       `json:"stars"`
+	Forks		int		  `json:"forks"`
 	Language    string    `json:"language"`
 	HTMLURL     string    `json:"html_url"`
 	Notes       string    `json:"notes"`
@@ -52,6 +53,7 @@ func FromEnt(t *ent.TrackedRepo) Repo {
 		FullName:    t.FullName,
 		Description: t.Description,
 		Stars:       t.Stars,
+		Forks:		 t.Forks,
 		Language:    t.Language,
 		HTMLURL:     t.HTMLURL,
 		Notes:       t.Notes,

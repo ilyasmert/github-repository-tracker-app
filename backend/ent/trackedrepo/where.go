@@ -79,6 +79,11 @@ func Stars(v int) predicate.TrackedRepo {
 	return predicate.TrackedRepo(sql.FieldEQ(FieldStars, v))
 }
 
+// Forks applies equality check predicate on the "forks" field. It's identical to ForksEQ.
+func Forks(v int) predicate.TrackedRepo {
+	return predicate.TrackedRepo(sql.FieldEQ(FieldForks, v))
+}
+
 // Language applies equality check predicate on the "language" field. It's identical to LanguageEQ.
 func Language(v string) predicate.TrackedRepo {
 	return predicate.TrackedRepo(sql.FieldEQ(FieldLanguage, v))
@@ -417,6 +422,46 @@ func StarsLT(v int) predicate.TrackedRepo {
 // StarsLTE applies the LTE predicate on the "stars" field.
 func StarsLTE(v int) predicate.TrackedRepo {
 	return predicate.TrackedRepo(sql.FieldLTE(FieldStars, v))
+}
+
+// ForksEQ applies the EQ predicate on the "forks" field.
+func ForksEQ(v int) predicate.TrackedRepo {
+	return predicate.TrackedRepo(sql.FieldEQ(FieldForks, v))
+}
+
+// ForksNEQ applies the NEQ predicate on the "forks" field.
+func ForksNEQ(v int) predicate.TrackedRepo {
+	return predicate.TrackedRepo(sql.FieldNEQ(FieldForks, v))
+}
+
+// ForksIn applies the In predicate on the "forks" field.
+func ForksIn(vs ...int) predicate.TrackedRepo {
+	return predicate.TrackedRepo(sql.FieldIn(FieldForks, vs...))
+}
+
+// ForksNotIn applies the NotIn predicate on the "forks" field.
+func ForksNotIn(vs ...int) predicate.TrackedRepo {
+	return predicate.TrackedRepo(sql.FieldNotIn(FieldForks, vs...))
+}
+
+// ForksGT applies the GT predicate on the "forks" field.
+func ForksGT(v int) predicate.TrackedRepo {
+	return predicate.TrackedRepo(sql.FieldGT(FieldForks, v))
+}
+
+// ForksGTE applies the GTE predicate on the "forks" field.
+func ForksGTE(v int) predicate.TrackedRepo {
+	return predicate.TrackedRepo(sql.FieldGTE(FieldForks, v))
+}
+
+// ForksLT applies the LT predicate on the "forks" field.
+func ForksLT(v int) predicate.TrackedRepo {
+	return predicate.TrackedRepo(sql.FieldLT(FieldForks, v))
+}
+
+// ForksLTE applies the LTE predicate on the "forks" field.
+func ForksLTE(v int) predicate.TrackedRepo {
+	return predicate.TrackedRepo(sql.FieldLTE(FieldForks, v))
 }
 
 // LanguageEQ applies the EQ predicate on the "language" field.

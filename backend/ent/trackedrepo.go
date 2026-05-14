@@ -27,6 +27,8 @@ type TrackedRepo struct {
 	Description string `json:"description,omitempty"`
 	// Stars holds the value of the "stars" field.
 	Stars int `json:"stars,omitempty"`
+	// Forks holds the value of the "forks" field.
+	Forks int `json:"forks,omitempty"`
 	// Language holds the value of the "language" field.
 	Language string `json:"language,omitempty"`
 	// HTMLURL holds the value of the "html_url" field.
@@ -47,7 +49,7 @@ func (*TrackedRepo) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case trackedrepo.FieldID, trackedrepo.FieldStars:
+		case trackedrepo.FieldID, trackedrepo.FieldStars, trackedrepo.FieldForks:
 			values[i] = new(sql.NullInt64)
 		case trackedrepo.FieldOwner, trackedrepo.FieldName, trackedrepo.FieldFullName, trackedrepo.FieldDescription, trackedrepo.FieldLanguage, trackedrepo.FieldHTMLURL, trackedrepo.FieldNotes:
 			values[i] = new(sql.NullString)
@@ -103,6 +105,12 @@ func (tr *TrackedRepo) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field stars", values[i])
 			} else if value.Valid {
 				tr.Stars = int(value.Int64)
+			}
+		case trackedrepo.FieldForks:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field forks", values[i])
+			} else if value.Valid {
+				tr.Forks = int(value.Int64)
 			}
 		case trackedrepo.FieldLanguage:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -190,6 +198,9 @@ func (tr *TrackedRepo) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("stars=")
 	builder.WriteString(fmt.Sprintf("%v", tr.Stars))
+	builder.WriteString(", ")
+	builder.WriteString("forks=")
+	builder.WriteString(fmt.Sprintf("%v", tr.Forks))
 	builder.WriteString(", ")
 	builder.WriteString("language=")
 	builder.WriteString(tr.Language)

@@ -83,6 +83,7 @@ func (s *Service) Create(ctx context.Context, owner, name string) (*ent.TrackedR
 		FullName:    gh.FullName,
 		Description: gh.Description,
 		Stars:       gh.Stars,
+		Forks:		 gh.Forks,
 		Language:    gh.Language,
 		HTMLURL:     gh.HTMLURL,
 		FetchedAt:   gh.FetchedAt,
@@ -109,6 +110,7 @@ func (s *Service) Refresh(ctx context.Context, id int) (*ent.TrackedRepo, error)
 	updated, err := s.repo.Refresh(ctx, id, RefreshParams{
 		Description: gh.Description,
 		Stars:       gh.Stars,
+		Forks:		 gh.Forks,
 		Language:    gh.Language,
 		HTMLURL:     gh.HTMLURL,
 		FetchedAt:   gh.FetchedAt,

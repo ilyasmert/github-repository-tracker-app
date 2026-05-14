@@ -81,30 +81,36 @@ func init() {
 	trackedrepo.DefaultStars = trackedrepoDescStars.Default.(int)
 	// trackedrepo.StarsValidator is a validator for the "stars" field. It is called by the builders before save.
 	trackedrepo.StarsValidator = trackedrepoDescStars.Validators[0].(func(int) error)
+	// trackedrepoDescForks is the schema descriptor for forks field.
+	trackedrepoDescForks := trackedrepoFields[5].Descriptor()
+	// trackedrepo.DefaultForks holds the default value on creation for the forks field.
+	trackedrepo.DefaultForks = trackedrepoDescForks.Default.(int)
+	// trackedrepo.ForksValidator is a validator for the "forks" field. It is called by the builders before save.
+	trackedrepo.ForksValidator = trackedrepoDescForks.Validators[0].(func(int) error)
 	// trackedrepoDescLanguage is the schema descriptor for language field.
-	trackedrepoDescLanguage := trackedrepoFields[5].Descriptor()
+	trackedrepoDescLanguage := trackedrepoFields[6].Descriptor()
 	// trackedrepo.DefaultLanguage holds the default value on creation for the language field.
 	trackedrepo.DefaultLanguage = trackedrepoDescLanguage.Default.(string)
 	// trackedrepoDescHTMLURL is the schema descriptor for html_url field.
-	trackedrepoDescHTMLURL := trackedrepoFields[6].Descriptor()
+	trackedrepoDescHTMLURL := trackedrepoFields[7].Descriptor()
 	// trackedrepo.HTMLURLValidator is a validator for the "html_url" field. It is called by the builders before save.
 	trackedrepo.HTMLURLValidator = trackedrepoDescHTMLURL.Validators[0].(func(string) error)
 	// trackedrepoDescNotes is the schema descriptor for notes field.
-	trackedrepoDescNotes := trackedrepoFields[7].Descriptor()
+	trackedrepoDescNotes := trackedrepoFields[8].Descriptor()
 	// trackedrepo.DefaultNotes holds the default value on creation for the notes field.
 	trackedrepo.DefaultNotes = trackedrepoDescNotes.Default.(string)
 	// trackedrepo.NotesValidator is a validator for the "notes" field. It is called by the builders before save.
 	trackedrepo.NotesValidator = trackedrepoDescNotes.Validators[0].(func(string) error)
 	// trackedrepoDescFetchedAt is the schema descriptor for fetched_at field.
-	trackedrepoDescFetchedAt := trackedrepoFields[8].Descriptor()
+	trackedrepoDescFetchedAt := trackedrepoFields[9].Descriptor()
 	// trackedrepo.DefaultFetchedAt holds the default value on creation for the fetched_at field.
 	trackedrepo.DefaultFetchedAt = trackedrepoDescFetchedAt.Default.(func() time.Time)
 	// trackedrepoDescCreatedAt is the schema descriptor for created_at field.
-	trackedrepoDescCreatedAt := trackedrepoFields[9].Descriptor()
+	trackedrepoDescCreatedAt := trackedrepoFields[10].Descriptor()
 	// trackedrepo.DefaultCreatedAt holds the default value on creation for the created_at field.
 	trackedrepo.DefaultCreatedAt = trackedrepoDescCreatedAt.Default.(func() time.Time)
 	// trackedrepoDescUpdatedAt is the schema descriptor for updated_at field.
-	trackedrepoDescUpdatedAt := trackedrepoFields[10].Descriptor()
+	trackedrepoDescUpdatedAt := trackedrepoFields[11].Descriptor()
 	// trackedrepo.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	trackedrepo.DefaultUpdatedAt = trackedrepoDescUpdatedAt.Default.(func() time.Time)
 	// trackedrepo.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.

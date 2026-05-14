@@ -196,6 +196,9 @@ export function RepoRow({ repo }: { repo: TrackedRepo }) {
           <span className="tabular-nums" title="Stars">
             ★ {repo.stars.toLocaleString()}
           </span>
+          <span className="tabular-nums" title="Forks">
+            f {repo.forks.toLocaleString()}
+          </span>
           {repo.language ? (
             <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-700">
               {repo.language}

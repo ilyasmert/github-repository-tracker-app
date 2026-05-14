@@ -39,6 +39,8 @@ type TrackedRepoMutation struct {
 	description   *string
 	stars         *int
 	addstars      *int
+	forks         *int
+	addforks      *int
 	language      *string
 	html_url      *string
 	notes         *string
@@ -362,6 +364,62 @@ func (m *TrackedRepoMutation) ResetStars() {
 	m.addstars = nil
 }
 
+// SetForks sets the "forks" field.
+func (m *TrackedRepoMutation) SetForks(i int) {
+	m.forks = &i
+	m.addforks = nil
+}
+
+// Forks returns the value of the "forks" field in the mutation.
+func (m *TrackedRepoMutation) Forks() (r int, exists bool) {
+	v := m.forks
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldForks returns the old "forks" field's value of the TrackedRepo entity.
+// If the TrackedRepo object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TrackedRepoMutation) OldForks(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldForks is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldForks requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldForks: %w", err)
+	}
+	return oldValue.Forks, nil
+}
+
+// AddForks adds i to the "forks" field.
+func (m *TrackedRepoMutation) AddForks(i int) {
+	if m.addforks != nil {
+		*m.addforks += i
+	} else {
+		m.addforks = &i
+	}
+}
+
+// AddedForks returns the value that was added to the "forks" field in this mutation.
+func (m *TrackedRepoMutation) AddedForks() (r int, exists bool) {
+	v := m.addforks
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetForks resets all changes to the "forks" field.
+func (m *TrackedRepoMutation) ResetForks() {
+	m.forks = nil
+	m.addforks = nil
+}
+
 // SetLanguage sets the "language" field.
 func (m *TrackedRepoMutation) SetLanguage(s string) {
 	m.language = &s
@@ -638,7 +696,7 @@ func (m *TrackedRepoMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *TrackedRepoMutation) Fields() []string {
-	fields := make([]string, 0, 11)
+	fields := make([]string, 0, 12)
 	if m.owner != nil {
 		fields = append(fields, trackedrepo.FieldOwner)
 	}
@@ -653,6 +711,9 @@ func (m *TrackedRepoMutation) Fields() []string {
 	}
 	if m.stars != nil {
 		fields = append(fields, trackedrepo.FieldStars)
+	}
+	if m.forks != nil {
+		fields = append(fields, trackedrepo.FieldForks)
 	}
 	if m.language != nil {
 		fields = append(fields, trackedrepo.FieldLanguage)
@@ -690,6 +751,8 @@ func (m *TrackedRepoMutation) Field(name string) (ent.Value, bool) {
 		return m.Description()
 	case trackedrepo.FieldStars:
 		return m.Stars()
+	case trackedrepo.FieldForks:
+		return m.Forks()
 	case trackedrepo.FieldLanguage:
 		return m.Language()
 	case trackedrepo.FieldHTMLURL:
@@ -721,6 +784,8 @@ func (m *TrackedRepoMutation) OldField(ctx context.Context, name string) (ent.Va
 		return m.OldDescription(ctx)
 	case trackedrepo.FieldStars:
 		return m.OldStars(ctx)
+	case trackedrepo.FieldForks:
+		return m.OldForks(ctx)
 	case trackedrepo.FieldLanguage:
 		return m.OldLanguage(ctx)
 	case trackedrepo.FieldHTMLURL:
@@ -777,6 +842,13 @@ func (m *TrackedRepoMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetStars(v)
 		return nil
+	case trackedrepo.FieldForks:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetForks(v)
+		return nil
 	case trackedrepo.FieldLanguage:
 		v, ok := value.(string)
 		if !ok {
@@ -830,6 +902,9 @@ func (m *TrackedRepoMutation) AddedFields() []string {
 	if m.addstars != nil {
 		fields = append(fields, trackedrepo.FieldStars)
 	}
+	if m.addforks != nil {
+		fields = append(fields, trackedrepo.FieldForks)
+	}
 	return fields
 }
 
@@ -840,6 +915,8 @@ func (m *TrackedRepoMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
 	case trackedrepo.FieldStars:
 		return m.AddedStars()
+	case trackedrepo.FieldForks:
+		return m.AddedForks()
 	}
 	return nil, false
 }
@@ -855,6 +932,13 @@ func (m *TrackedRepoMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddStars(v)
+		return nil
+	case trackedrepo.FieldForks:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddForks(v)
 		return nil
 	}
 	return fmt.Errorf("unknown TrackedRepo numeric field %s", name)
@@ -918,6 +1002,9 @@ func (m *TrackedRepoMutation) ResetField(name string) error {
 		return nil
 	case trackedrepo.FieldStars:
 		m.ResetStars()
+		return nil
+	case trackedrepo.FieldForks:
+		m.ResetForks()
 		return nil
 	case trackedrepo.FieldLanguage:
 		m.ResetLanguage()

@@ -16,6 +16,7 @@ var (
 		{Name: "full_name", Type: field.TypeString, Unique: true, Size: 201},
 		{Name: "description", Type: field.TypeString, Nullable: true, Size: 1024, Default: ""},
 		{Name: "stars", Type: field.TypeInt, Default: 0},
+		{Name: "forks", Type: field.TypeInt, Default: 0},
 		{Name: "language", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "html_url", Type: field.TypeString},
 		{Name: "notes", Type: field.TypeString, Nullable: true, Size: 2000, Default: ""},
@@ -32,7 +33,7 @@ var (
 			{
 				Name:    "trackedrepo_language",
 				Unique:  false,
-				Columns: []*schema.Column{TrackedReposColumns[6]},
+				Columns: []*schema.Column{TrackedReposColumns[7]},
 			},
 			{
 				Name:    "trackedrepo_stars",

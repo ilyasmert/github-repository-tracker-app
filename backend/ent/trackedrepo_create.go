@@ -66,6 +66,20 @@ func (trc *TrackedRepoCreate) SetNillableStars(i *int) *TrackedRepoCreate {
 	return trc
 }
 
+// SetForks sets the "forks" field.
+func (trc *TrackedRepoCreate) SetForks(i int) *TrackedRepoCreate {
+	trc.mutation.SetForks(i)
+	return trc
+}
+
+// SetNillableForks sets the "forks" field if the given value is not nil.
+func (trc *TrackedRepoCreate) SetNillableForks(i *int) *TrackedRepoCreate {
+	if i != nil {
+		trc.SetForks(*i)
+	}
+	return trc
+}
+
 // SetLanguage sets the "language" field.
 func (trc *TrackedRepoCreate) SetLanguage(s string) *TrackedRepoCreate {
 	trc.mutation.SetLanguage(s)
@@ -185,6 +199,10 @@ func (trc *TrackedRepoCreate) defaults() {
 		v := trackedrepo.DefaultStars
 		trc.mutation.SetStars(v)
 	}
+	if _, ok := trc.mutation.Forks(); !ok {
+		v := trackedrepo.DefaultForks
+		trc.mutation.SetForks(v)
+	}
 	if _, ok := trc.mutation.Language(); !ok {
 		v := trackedrepo.DefaultLanguage
 		trc.mutation.SetLanguage(v)
@@ -244,6 +262,14 @@ func (trc *TrackedRepoCreate) check() error {
 	if v, ok := trc.mutation.Stars(); ok {
 		if err := trackedrepo.StarsValidator(v); err != nil {
 			return &ValidationError{Name: "stars", err: fmt.Errorf(`ent: validator failed for field "TrackedRepo.stars": %w`, err)}
+		}
+	}
+	if _, ok := trc.mutation.Forks(); !ok {
+		return &ValidationError{Name: "forks", err: errors.New(`ent: missing required field "TrackedRepo.forks"`)}
+	}
+	if v, ok := trc.mutation.Forks(); ok {
+		if err := trackedrepo.ForksValidator(v); err != nil {
+			return &ValidationError{Name: "forks", err: fmt.Errorf(`ent: validator failed for field "TrackedRepo.forks": %w`, err)}
 		}
 	}
 	if _, ok := trc.mutation.HTMLURL(); !ok {
@@ -313,6 +339,10 @@ func (trc *TrackedRepoCreate) createSpec() (*TrackedRepo, *sqlgraph.CreateSpec) 
 	if value, ok := trc.mutation.Stars(); ok {
 		_spec.SetField(trackedrepo.FieldStars, field.TypeInt, value)
 		_node.Stars = value
+	}
+	if value, ok := trc.mutation.Forks(); ok {
+		_spec.SetField(trackedrepo.FieldForks, field.TypeInt, value)
+		_node.Forks = value
 	}
 	if value, ok := trc.mutation.Language(); ok {
 		_spec.SetField(trackedrepo.FieldLanguage, field.TypeString, value)

@@ -23,6 +23,8 @@ const (
 	FieldDescription = "description"
 	// FieldStars holds the string denoting the stars field in the database.
 	FieldStars = "stars"
+	// FieldForks holds the string denoting the forks field in the database.
+	FieldForks = "forks"
 	// FieldLanguage holds the string denoting the language field in the database.
 	FieldLanguage = "language"
 	// FieldHTMLURL holds the string denoting the html_url field in the database.
@@ -47,6 +49,7 @@ var Columns = []string{
 	FieldFullName,
 	FieldDescription,
 	FieldStars,
+	FieldForks,
 	FieldLanguage,
 	FieldHTMLURL,
 	FieldNotes,
@@ -80,6 +83,10 @@ var (
 	DefaultStars int
 	// StarsValidator is a validator for the "stars" field. It is called by the builders before save.
 	StarsValidator func(int) error
+	// DefaultForks holds the default value on creation for the "forks" field.
+	DefaultForks int
+	// ForksValidator is a validator for the "forks" field. It is called by the builders before save.
+	ForksValidator func(int) error
 	// DefaultLanguage holds the default value on creation for the "language" field.
 	DefaultLanguage string
 	// HTMLURLValidator is a validator for the "html_url" field. It is called by the builders before save.
@@ -129,6 +136,11 @@ func ByDescription(opts ...sql.OrderTermOption) OrderOption {
 // ByStars orders the results by the stars field.
 func ByStars(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldStars, opts...).ToFunc()
+}
+
+// ByForks orders the results by the forks field.
+func ByForks(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldForks, opts...).ToFunc()
 }
 
 // ByLanguage orders the results by the language field.

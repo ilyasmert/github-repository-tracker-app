@@ -111,6 +111,27 @@ func (tru *TrackedRepoUpdate) AddStars(i int) *TrackedRepoUpdate {
 	return tru
 }
 
+// SetForks sets the "forks" field.
+func (tru *TrackedRepoUpdate) SetForks(i int) *TrackedRepoUpdate {
+	tru.mutation.ResetForks()
+	tru.mutation.SetForks(i)
+	return tru
+}
+
+// SetNillableForks sets the "forks" field if the given value is not nil.
+func (tru *TrackedRepoUpdate) SetNillableForks(i *int) *TrackedRepoUpdate {
+	if i != nil {
+		tru.SetForks(*i)
+	}
+	return tru
+}
+
+// AddForks adds i to the "forks" field.
+func (tru *TrackedRepoUpdate) AddForks(i int) *TrackedRepoUpdate {
+	tru.mutation.AddForks(i)
+	return tru
+}
+
 // SetLanguage sets the "language" field.
 func (tru *TrackedRepoUpdate) SetLanguage(s string) *TrackedRepoUpdate {
 	tru.mutation.SetLanguage(s)
@@ -253,6 +274,11 @@ func (tru *TrackedRepoUpdate) check() error {
 			return &ValidationError{Name: "stars", err: fmt.Errorf(`ent: validator failed for field "TrackedRepo.stars": %w`, err)}
 		}
 	}
+	if v, ok := tru.mutation.Forks(); ok {
+		if err := trackedrepo.ForksValidator(v); err != nil {
+			return &ValidationError{Name: "forks", err: fmt.Errorf(`ent: validator failed for field "TrackedRepo.forks": %w`, err)}
+		}
+	}
 	if v, ok := tru.mutation.HTMLURL(); ok {
 		if err := trackedrepo.HTMLURLValidator(v); err != nil {
 			return &ValidationError{Name: "html_url", err: fmt.Errorf(`ent: validator failed for field "TrackedRepo.html_url": %w`, err)}
@@ -298,6 +324,12 @@ func (tru *TrackedRepoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := tru.mutation.AddedStars(); ok {
 		_spec.AddField(trackedrepo.FieldStars, field.TypeInt, value)
+	}
+	if value, ok := tru.mutation.Forks(); ok {
+		_spec.SetField(trackedrepo.FieldForks, field.TypeInt, value)
+	}
+	if value, ok := tru.mutation.AddedForks(); ok {
+		_spec.AddField(trackedrepo.FieldForks, field.TypeInt, value)
 	}
 	if value, ok := tru.mutation.Language(); ok {
 		_spec.SetField(trackedrepo.FieldLanguage, field.TypeString, value)
@@ -420,6 +452,27 @@ func (truo *TrackedRepoUpdateOne) SetNillableStars(i *int) *TrackedRepoUpdateOne
 // AddStars adds i to the "stars" field.
 func (truo *TrackedRepoUpdateOne) AddStars(i int) *TrackedRepoUpdateOne {
 	truo.mutation.AddStars(i)
+	return truo
+}
+
+// SetForks sets the "forks" field.
+func (truo *TrackedRepoUpdateOne) SetForks(i int) *TrackedRepoUpdateOne {
+	truo.mutation.ResetForks()
+	truo.mutation.SetForks(i)
+	return truo
+}
+
+// SetNillableForks sets the "forks" field if the given value is not nil.
+func (truo *TrackedRepoUpdateOne) SetNillableForks(i *int) *TrackedRepoUpdateOne {
+	if i != nil {
+		truo.SetForks(*i)
+	}
+	return truo
+}
+
+// AddForks adds i to the "forks" field.
+func (truo *TrackedRepoUpdateOne) AddForks(i int) *TrackedRepoUpdateOne {
+	truo.mutation.AddForks(i)
 	return truo
 }
 
@@ -578,6 +631,11 @@ func (truo *TrackedRepoUpdateOne) check() error {
 			return &ValidationError{Name: "stars", err: fmt.Errorf(`ent: validator failed for field "TrackedRepo.stars": %w`, err)}
 		}
 	}
+	if v, ok := truo.mutation.Forks(); ok {
+		if err := trackedrepo.ForksValidator(v); err != nil {
+			return &ValidationError{Name: "forks", err: fmt.Errorf(`ent: validator failed for field "TrackedRepo.forks": %w`, err)}
+		}
+	}
 	if v, ok := truo.mutation.HTMLURL(); ok {
 		if err := trackedrepo.HTMLURLValidator(v); err != nil {
 			return &ValidationError{Name: "html_url", err: fmt.Errorf(`ent: validator failed for field "TrackedRepo.html_url": %w`, err)}
@@ -640,6 +698,12 @@ func (truo *TrackedRepoUpdateOne) sqlSave(ctx context.Context) (_node *TrackedRe
 	}
 	if value, ok := truo.mutation.AddedStars(); ok {
 		_spec.AddField(trackedrepo.FieldStars, field.TypeInt, value)
+	}
+	if value, ok := truo.mutation.Forks(); ok {
+		_spec.SetField(trackedrepo.FieldForks, field.TypeInt, value)
+	}
+	if value, ok := truo.mutation.AddedForks(); ok {
+		_spec.AddField(trackedrepo.FieldForks, field.TypeInt, value)
 	}
 	if value, ok := truo.mutation.Language(); ok {
 		_spec.SetField(trackedrepo.FieldLanguage, field.TypeString, value)

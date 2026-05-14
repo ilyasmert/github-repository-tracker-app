@@ -27,6 +27,7 @@ type Repo struct {
 	HTMLURL     string
 	Language    string
 	Stars       int
+	Forks		int
 	FetchedAt   time.Time
 }
 
@@ -59,6 +60,7 @@ type repoResponse struct {
 	HTMLURL     string `json:"html_url"`
 	Language    string `json:"language"`
 	Stars       int    `json:"stargazers_count"`
+	Forks       int    `json:"forks_count"`
 	Owner       struct {
 		Login string `json:"login"`
 	} `json:"owner"`
@@ -125,6 +127,7 @@ func (c *Client) GetRepo(ctx context.Context, owner, name string) (*Repo, error)
 		HTMLURL:     parsed.HTMLURL,
 		Language:    parsed.Language,
 		Stars:       parsed.Stars,
+		Forks:		 parsed.Forks,
 		FetchedAt:   time.Now().UTC(),
 	}, nil
 }

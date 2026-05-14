@@ -5,6 +5,7 @@ export type TrackedRepo = {
   full_name: string;
   description: string;
   stars: number;
+  forks: number;
   language: string;
   html_url: string;
   notes: string;

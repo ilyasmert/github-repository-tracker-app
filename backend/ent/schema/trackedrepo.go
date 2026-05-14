@@ -34,6 +34,9 @@ func (TrackedRepo) Fields() []ent.Field {
 		field.Int("stars").
 			NonNegative().
 			Default(0),
+		field.Int("forks").
+			NonNegative().
+			Default(0),
 		field.String("language").
 			Optional().
 			Default(""),

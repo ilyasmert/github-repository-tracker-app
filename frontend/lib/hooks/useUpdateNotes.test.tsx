@@ -23,6 +23,7 @@ function makeRepo(overrides: Partial<TrackedRepo> = {}): TrackedRepo {
     full_name: "golang/go",
     description: "",
     stars: 0,
+    forks: 0,
     language: "Go",
     html_url: "https://github.com/golang/go",
     notes: "original",
