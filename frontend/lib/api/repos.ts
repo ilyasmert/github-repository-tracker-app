@@ -11,6 +11,7 @@ function buildReposQuery(params: ListReposParams): string {
   const search = new URLSearchParams();
   if (params.language) search.set("language", params.language);
   if (params.sort) search.set("sort", params.sort);
+  if (params.minStars) search.set("min_stars", String(params.minStars));
   const qs = search.toString();
   return qs ? `?${qs}` : "";
 }

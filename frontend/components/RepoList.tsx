@@ -20,7 +20,7 @@ function RowSkeleton() {
 export function RepoList() {
   const searchParams = useSearchParams();
   const filters = parseRepoFilters(searchParams);
-  const hasFilters = Boolean(filters.language);
+  const hasFilters = Boolean(filters.language || filters.minStars);
   const { data, isPending, isError, refetch } = useRepos(filters);
 
   if (isPending) {

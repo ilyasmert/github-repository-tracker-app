@@ -24,6 +24,7 @@ export type SortOption = "stars_desc" | "stars_asc" | "created_desc";
 export type ListReposParams = {
   language?: string;
   sort?: SortOption;
+  minStars?: number;
 };
 
 export type CreateRepoBody = {

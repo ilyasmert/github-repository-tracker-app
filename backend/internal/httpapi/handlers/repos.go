@@ -66,8 +66,18 @@ func (h *Repos) List(c *gin.Context) {
 		apierror.Validation(c, "sort must be one of: created_desc, stars_desc, stars_asc")
 		return
 	}
+	var minStars int
+	if raw := c.Query("min_stars"); raw != "" {
+		n, err := strconv.Atoi(raw)
+		if err != nil || n < 0 {
+			apierror.Validation(c, "min stars cannot be a negative number")
+			return
+		}
+		minStars = n
+	}
 	rows, err := h.svc.List(c.Request.Context(), repos.ListFilter{
 		Language: strings.TrimSpace(c.Query("language")),
+		MinStars: minStars,
 		Sort:     sort,
 	})
 	if err != nil {

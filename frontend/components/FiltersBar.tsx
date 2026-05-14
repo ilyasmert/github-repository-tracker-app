@@ -17,13 +17,16 @@ export function FiltersBar() {
   const searchParams = useSearchParams();
 
   const languageParam = searchParams.get("language") ?? "";
+  const minStarsParam = searchParams.get("min_stars") ?? "";
   const sortParam = (searchParams.get("sort") as SortOption | null) ?? "created_desc";
 
   const [language, setLanguage] = useState(languageParam);
+  const [minStars, setMinStars] = useState(minStarsParam);
 
   useEffect(() => {
     setLanguage(languageParam);
-  }, [languageParam]);
+    setMinStars(minStarsParam);
+  }, [languageParam, minStarsParam]);
 
   const updateParams = (mutate: (next: URLSearchParams) => void) => {
     const next = new URLSearchParams(searchParams.toString());
@@ -37,6 +40,14 @@ export function FiltersBar() {
     updateParams((next) => {
       if (trimmed) next.set("language", trimmed);
       else next.delete("language");
+    });
+  };
+
+  const commitMinStars = (value: string) => {
+    const trimmed = value.trim();
+    updateParams((next) => {
+      if (trimmed) next.set("min_stars", trimmed);
+      else next.delete("min_stars");
     });
   };
 
@@ -66,6 +77,28 @@ export function FiltersBar() {
             }
           }}
           placeholder="e.g. Go"
+          className="mt-1 w-full rounded border border-slate-300 bg-white px-2 py-1 text-sm focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-200 sm:w-48"
+        />
+      </div>
+
+      <div className="flex flex-col">
+        <label htmlFor="min-stars-filter" className="text-xs font-medium text-slate-600">
+          Min Stars
+        </label>
+        <input
+          id="min-stars-filter"
+          type="number"
+          min={0}
+          value={minStars}
+          onChange={(e) => setMinStars(e.target.value)}
+          onBlur={(e) => commitMinStars(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              commitMinStars(e.currentTarget.value);
+            }
+          }}
+          placeholder="e.g. 1000"
           className="mt-1 w-full rounded border border-slate-300 bg-white px-2 py-1 text-sm focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-200 sm:w-48"
         />
       </div>

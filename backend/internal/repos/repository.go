@@ -50,6 +50,7 @@ type RefreshParams struct {
 type ListFilter struct {
 	Language string
 	Sort     Sort
+	MinStars int
 }
 
 // Stats is the result of the aggregation query. TopLanguage is nil when no
@@ -120,6 +121,9 @@ func (r *Repository) List(ctx context.Context, filter ListFilter) ([]*ent.Tracke
 	q := r.client.TrackedRepo.Query()
 	if filter.Language != "" {
 		q = q.Where(trackedrepo.LanguageEqualFold(filter.Language))
+	}
+	if (filter.MinStars) > 0 {
+		q = q.Where(trackedrepo.StarsGTE(filter.MinStars))
 	}
 	switch filter.Sort {
 	case SortStarsDesc:
