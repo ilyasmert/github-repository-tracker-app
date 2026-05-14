@@ -42,7 +42,7 @@ backend/
 ```
 frontend/
 ├── app/
-│   ├── layout.tsx, page.tsx, providers.tsx  # RSC shell + QueryClientProvider
+│   ├── layout.tsx, page.tsx, providers.tsx  # QueryClientProvider
 │   └── globals.css
 ├── components/
 │   ├── StatsPanel.tsx, AddRepoForm.tsx
@@ -185,7 +185,7 @@ This project was built collaboratively with **Claude Code** (Anthropic's CLI).
 1. Scaffold (modules, configs, Docker) — no logic.
 2. Backend domain: Ent schema → repository → service → GitHub client.
 3. HTTP layer: error envelope → handlers → routing → stats endpoint.
-4. Backend tests (service-level with an `httptest` GitHub stub).
+4. Backend tests (service-level).
 5. Frontend scaffold: typed API client, query provider, base shell.
 6. Components in dependency order: stats → list → filters → add form → row actions.
 7. Optimistic notes + per-row delete/refresh, with tests for the rollback path.
