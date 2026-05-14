@@ -9,6 +9,7 @@ import { useRefreshRepo } from "@/lib/hooks/useRefreshRepo";
 import { useUpdateNotes } from "@/lib/hooks/useUpdateNotes";
 
 import { ConfirmDialog } from "./ConfirmDialog";
+import { Toast } from "./Toast";
 
 const NOTES_MAX = 2000;
 
@@ -76,6 +77,10 @@ export function RepoRow({ repo }: { repo: TrackedRepo }) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(repo.notes);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -85,6 +90,12 @@ export function RepoRow({ repo }: { repo: TrackedRepo }) {
   useEffect(() => {
     if (editing) textareaRef.current?.focus();
   }, [editing]);
+
+  useEffect(() => {
+    if (!toast) return;
+    const id = setTimeout(() => setToast(null), 3000);
+    return () => clearTimeout(id);
+  }, [toast])
 
   const saving = notesMutation.isPending;
   const refreshing = refreshMutation.isPending;
@@ -140,7 +151,10 @@ export function RepoRow({ repo }: { repo: TrackedRepo }) {
 
   function onRefresh() {
     refreshMutation.reset();
-    refreshMutation.mutate(repo.id);
+    refreshMutation.mutate(repo.id, {
+      onSuccess: () => setToast({message: "successful", type: "success"}),
+      onError: (err) => setToast({message: "err", type: "error"})
+    });
   }
 
   function openDeleteConfirm() {
@@ -249,7 +263,8 @@ export function RepoRow({ repo }: { repo: TrackedRepo }) {
             />
             <div className="mt-1 flex items-center justify-between gap-2">
               <span className="text-xs text-slate-400">
-                {draft.length}/{NOTES_MAX} · ⌘/Ctrl+Enter to save · Esc to cancel
+                {draft.length}/{NOTES_MAX} · ⌘/Ctrl+Enter to save · Esc to
+                cancel
               </span>
               <div className="flex items-center gap-2">
                 <button
